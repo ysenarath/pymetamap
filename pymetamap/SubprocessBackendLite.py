@@ -74,7 +74,7 @@ class SubprocessBackendLite(MetaMapLite):
                     restrict_to_sts = [restrict_to_sts]
                 if len(restrict_to_sts) > 0:
                     command.append('--restrict_to_sts={}'.format(str(','.join(restrict_to_sts))))
-                    #command.append(str(','.join(restrict_to_sts)))
+                    # command.append(str(','.join(restrict_to_sts)))
 
             if restrict_to_sources:
                 if isinstance(restrict_to_sources, str):
@@ -88,8 +88,8 @@ class SubprocessBackendLite(MetaMapLite):
 
             command.append(input_file.name)
             command.append('--overwrite')
-            #command.append('--indexdir={}data/ivf/2020AA/USAbase'.format(self.metamap_home))
-            #command.append('--specialtermsfile={}data/specialterms.txt'.format(self.metamap_home))
+            # command.append('--indexdir={}data/ivf/2020AA/USAbase'.format(self.metamap_home))
+            # command.append('--specialtermsfile={}data/specialterms.txt'.format(self.metamap_home))
             # command.append(output_file.name)
 
             output_file_name, file_extension = os.path.splitext(input_file.name)
@@ -98,30 +98,17 @@ class SubprocessBackendLite(MetaMapLite):
             output_file_name, file_extension = os.path.splitext(input_file.name)
             output_file_name += "." + "mmi"
 
-            # output = str(output_file.read())
-            metamap_process = subprocess.Popen(command, stdout=subprocess.PIPE)
+            metamap_process = subprocess.Popen(command, cwd=self.metamap_home, stdout=subprocess.PIPE)
             while metamap_process.poll() is None:
                 stdout = str(metamap_process.stdout.readline())
                 if 'ERROR' in stdout:
                     metamap_process.terminate()
                     error = stdout.rstrip()
-
-            # print("input file name: {0}".format(input_file.name))
             output_file_name, file_extension = os.path.splitext(input_file.name)
             output_file_name += "." + "mmi"
-            # print("output_file_name: {0}".format(output_file_name))
             with open(output_file_name) as fd:
                 output = fd.read()
-            # output = str(output_file.read())
-            # print("output: {0}".format(output))
         except:
             pass
         concepts = CorpusLite.load(output.splitlines())
         return concepts, error
-#finally:
-#    if sentences is not None:
-#        os.remove(input_file.name)
-#    else:
-#        input_file.close()
-#    # os.remove(output_file.name)
-#    #os.remove(output_file_name)
