@@ -25,21 +25,21 @@ class ConceptLiteMMI(namedtuple('Concept', FIELD_NAMES_MMI)):
 
     @classmethod
     def from_mmi(this_class, line):
-         fields = line.split('|')
-         return this_class(**dict(zip(FIELD_NAMES_MMI, fields)))
+        fields = line.split('|')
+        return this_class(**dict(zip(FIELD_NAMES_MMI, fields)))
 
 
 class CorpusLite(list):
     @classmethod
-    def load(this_class, stream):
+    def load(cls, stream):
         stream = iter(stream)
-        corpus = this_class()
+        corpus = cls()
         for line in stream:
             fields = line.split('|')
             if fields[1] == 'MMI':
                 corpus.append(ConceptLiteMMI.from_mmi(line))
             else:
-                print("THISIS A TEST:",line)
-                assert False, "Implemented only for MMI"
+                # assert False, "Implemented only for MMI"
+                pass
 
         return corpus
